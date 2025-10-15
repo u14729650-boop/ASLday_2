@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE Basketball Scoreboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #1a1a1a; /* Very dark background for a scoreboard look */
+            color: #ecf0f1; /* Light text */
+            min-height: 100vh;
+        }
+        .scoreboard-container {
+            background-color: #0d0d0d;
+            border: 5px solid #f39c12; /* Orange border for flair */
+            border-radius: 15px;
+            padding: 20px;
+            width: 95%;
+            max-width: 800px;
+            box-shadow: 0 0 40px rgba(243, 156, 18, 0.5);
+            margin-top: 50px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #34495e;
+        }
+        .time-box, .quarter-box {
+            background-color: #34495e;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        .score-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .team-panel {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .team-panel.home { background-color: #8e44ad; } /* Purple */
+        .team-panel.away { background-color: #27ae60; } /* Emerald Green */
+        .team-name {
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .score {
+            font-size: 8em;
+            font-weight: 900;
+            color: #f1c40f; /* Yellow */
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.8);
+            margin: 0;
+            line-height: 1;
+        }
+        .vs {
+            font-size: 4em;
+            font-weight: 900;
+            margin: 0 15px;
+            color: #f39c12;
+        }
+        #lastUpdated {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard-container">
+        <div class="header">
+            <div class="quarter-box">QTR: <span id="quarterDisplay">1</span></div>
+            <div class="time-box">TIME: <span id="timeDisplay">12:00</span></div>
+        </div>
+
+        <div class="score-display">
+            <div class="team-panel home">
+                <div class="team-name" id="homeNameDisplay">HOME</div>
+                <div class="score" id="homeScoreDisplay">0</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team-panel away">
+                <div class="team-name" id="awayNameDisplay">AWAY</div>
+                <div class="score" id="awayScoreDisplay">0</div>
+            </div>
+        </div>
+    </div>
+
+    <p id="lastUpdated"></p>
+
+    <script>
+        const HOME_NAME_DISPLAY = document.getElementById('homeNameDisplay');
+        const AWAY_NAME_DISPLAY = document.getElementById('awayNameDisplay');
+        const HOME_SCORE_DISPLAY = document.getElementById('homeScoreDisplay');
+        const AWAY_SCORE_DISPLAY = document.getElementById('awayScoreDisplay');
+        const QUARTER_DISPLAY = document.getElementById('quarterDisplay');
+        const TIME_DISPLAY = document.getElementById('timeDisplay');
+        const LAST_UPDATED = document.getElementById('lastUpdated');
+
+        function fetchScoreboard() {
+            // *** REAL-TIME SIMULATION USING LOCAL STORAGE ***
+            // In a real application, this is where you'd use fetch() to poll the server
+            // or, ideally, listen to a WebSockets stream.
+            const storedData = localStorage.getItem('basketballScoreboard');
+
+            if (storedData) {
+                const data = JSON.parse(storedData);
+
+                // Update the elements
+                HOME_NAME_DISPLAY.textContent = data.homeName;
+                AWAY_NAME_DISPLAY.textContent = data.awayName;
+                HOME_SCORE_DISPLAY.textContent = data.homeScore;
+                AWAY_SCORE_DISPLAY.textContent = data.awayScore;
+                QUARTER_DISPLAY.textContent = data.quarter;
+                TIME_DISPLAY.textContent = data.time;
+                LAST_UPDATED.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+            } else {
+                LAST_UPDATED.textContent = 'Awaiting initial score update...';
+            }
+        }
+
+        // 1. Fetch score immediately on load
+        fetchScoreboard();
+
+        // 2. Set up a regular interval to check for score updates (polling)
+        // This is a simple way to simulate real-time without WebSockets
+        setInterval(fetchScoreboard, 1000); // Check every 1 second
+    </script>
+</body>
+</html>
